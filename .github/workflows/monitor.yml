@@ -21,8 +21,13 @@ jobs:
           if [ -z "$(gh search issues --repo $GITHUB_REPOSITORY)" ]; then
             gh issue create --title "welcome" --body "very first issue" --repo $GITHUB_REPOSITORY
           fi
-          echo "opened issues in $GITHUB_REPOSITORY"
-          gh search issues --repo $GITHUB_REPOSITORY --state open
+          output=$(gh search issues --repo "$GITHUB_REPOSITORY" --state open)
+          if [ -z "$output" ]; then
+            echo "opened issues in $GITHUB_REPOSITORY"
+            echo "$output"
+          else 
+            exit 1
+          fi 
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
